@@ -5,7 +5,7 @@ import socket
 class GraphAppClient:
     def __init__(self, root):
         self.root = root
-        self.root.title("Клиент графика")
+        self.root.title("Построение графика")
         self.root.geometry("300x400+450+150")
         self.root.configure(bg="#F3E0DC")
 
@@ -42,14 +42,6 @@ class GraphAppClient:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect(("localhost", 65432))
             s.sendall(data.encode())
-
-            # Получаем график от сервера
-            with open("graph.png", "wb") as f:
-                while True:
-                    chunk = s.recv(4096)
-                    if not chunk:
-                        break
-                    f.write(chunk)
 
 root = tk.Tk()
 app = GraphAppClient(root)
