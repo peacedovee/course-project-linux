@@ -31,6 +31,10 @@ class GraphAppClient:
                                       activeforeground="#F3E0DC", command=self.send_data)
         self.apply_button.place(x=50, y=300)
 
+        self.loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(self.loop)
+        self.root.after(100, self.run_async_loop)
+
     def create_numeric_input(self, label_text, y_position, variable):
         tk.Label(self.root, text=label_text, bg="#F3E0DC", fg="#BC4639", font=("Arial", 14, "bold")).place(x=50, y=y_position)
         tk.Spinbox(self.root, from_=-100, to=100, font=("Arial", 14), textvariable=variable, width=13).place(x=80, y=y_position)
@@ -46,8 +50,18 @@ class GraphAppClient:
         print(f"Ответ от сервера: {reply}")
 
     def send_data(self):
-        asyncio.run(self.async_send_data())
+        self.loop.create_task(self.async_send_data())
 
-root = tk.Tk()
-app = GraphAppClient(root)
-root.mainloop()
+    def run_async_loop(self):
+        try:
+            self.loop.run_until_complete(asyncio.sleep(0))
+            self.root.after(100, self.run_async_loop)
+        except KeyboardInterrupt:
+            print("Клиент закрывается...")
+
+try:
+    root = tk.Tk()
+    app = GraphAppClient(root)
+    root.mainloop()
+except KeyboardInterrupt:
+    print("Программа завершена.")

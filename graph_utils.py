@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import logging
+import asyncio
 from mpl_toolkits.mplot3d import Axes3D
 
 # Настройка логирования
@@ -10,8 +11,13 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
-def create_graph(equation, x, y, z):
-    """Построение графика математического уравнения."""
+async def create_graph(equation, x, y, z):
+    """Асинхронное построение графика"""
+    loop = asyncio.get_event_loop()
+    await loop.run_in_executor(None, _create_graph_sync, equation, x, y, z)
+
+def _create_graph_sync(equation, x, y, z):
+    """Синхронная версия построения графика"""
     X = np.linspace(-10, 10, 100)
     Y = np.linspace(-10, 10, 100)
     X, Y = np.meshgrid(X, Y)
@@ -34,7 +40,7 @@ def create_graph(equation, x, y, z):
     ax.set_zlabel("Z")
     ax.set_title("График уравнения")
 
-    plt.show()
+    plt.show()  # Теперь график открывается в окне
 
 def parse_message(message):
     """Разбирает сообщение клиента и возвращает параметры."""

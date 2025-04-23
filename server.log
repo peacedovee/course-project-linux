@@ -1,1 +1,11 @@
 2025-04-23 17:57:21,202 - INFO - Сервер запущен! Нажмите Ctrl+C для завершения.
+2025-04-23 20:46:51,353 - INFO - Клиент (b'tcp://0.0.0.0:5555') x=5, y=3, z=-7, функция=x^2 + z^2 = y
+2025-04-23 20:53:28,639 - INFO - Клиент (<zmq.asyncio.Socket(zmq.REP) at 0x2bd04fbea60>) x=5, y=-3, z=1, функция=x^2 + z^2 = y
+2025-04-23 20:53:52,544 - INFO - Клиент (<zmq.asyncio.Socket(zmq.REP) at 0x2bd04fbea60>) x=5, y=-3, z=1, функция=sin(x) + cos(y) = z
+2025-04-23 20:53:54,305 - INFO - Клиент (<zmq.asyncio.Socket(zmq.REP) at 0x2bd04fbea60>) x=5, y=-3, z=1, функция=x^2 + y^2 - z^2 = 0
+2025-04-23 20:53:55,566 - INFO - Клиент (<zmq.asyncio.Socket(zmq.REP) at 0x2bd04fbea60>) x=5, y=-3, z=1, функция=x^2 + y^2 - z^2 = 0
+2025-04-23 20:53:56,837 - INFO - Клиент (<zmq.asyncio.Socket(zmq.REP) at 0x2bd04fbea60>) x=5, y=-3, z=1, функция=x^2 + y^2 - z^2 = 0
+2025-04-23 20:53:57,716 - INFO - Клиент (<zmq.asyncio.Socket(zmq.REP) at 0x2bd04fbea60>) x=5, y=-3, z=1, функция=x^2 + y^2 - z^2 = 0
+2025-04-23 20:53:58,592 - INFO - Клиент (<zmq.asyncio.Socket(zmq.REP) at 0x2bd04fbea60>) x=5, y=-3, z=1, функция=x^2 + y^2 - z^2 = 0
+2025-04-23 20:53:59,951 - INFO - Клиент (<zmq.asyncio.Socket(zmq.REP) at 0x2bd04fbea60>) x=5, y=-3, z=1, функция=sin(x) + cos(y) = z
+2025-04-23 20:54:00,909 - INFO - Клиент (<zmq.asyncio.Socket(zmq.REP) at 0x2bd04fbea60>) x=5, y=-3, z=1, функция=sin(x) + cos(y) = z
