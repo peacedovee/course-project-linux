@@ -1,9 +1,19 @@
-import socket
+import asyncio
+import zmq
+import zmq.asyncio
 import numpy as np
 import matplotlib.pyplot as plt
+import logging
 from mpl_toolkits.mplot3d import Axes3D
 
-def create_graph(equation, x, y, z):
+# Настройка логирования
+logging.basicConfig(
+    filename="server.log",
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
+
+async def create_graph(equation, x, y, z):
     X = np.linspace(-10, 10, 100)
     Y = np.linspace(-10, 10, 100)
     X, Y = np.meshgrid(X, Y)
@@ -26,30 +36,48 @@ def create_graph(equation, x, y, z):
 
     plt.show()
 
-def handle_client(conn):
-    data = conn.recv(1024).decode()
-    equation, x, y, z = data.split(",")
-    x, y, z = int(x), int(y), int(z)
+async def handle_client(socket):
+    while True:
+        try:
+            message = await socket.recv_string()
+            equation, x, y, z = message.split(",")
+            x, y, z = int(x), int(y), int(z)
+            client_ip = socket.getsockopt(zmq.LAST_ENDPOINT)
 
-    print(f"Получены данные: уравнение={equation}, x={x}, y={y}, z={z}")
-    create_graph(equation, x, y, z)
+            log_message = f"Клиент ({client_ip}) x={x}, y={y}, z={z}, функция={equation}"
+            logging.info(log_message)
+            print(log_message)
 
-def start_server():
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server:
-        server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        server.bind(("localhost", 65432))
-        server.listen()
-        print("Сервер запущен и ожидает подключения...")
+            await create_graph(equation, x, y, z)
+            await socket.send_string("График построен!")
 
+        except zmq.ZMQError as e:
+            logging.error(f"Ошибка сокета: {e}")
+            print(f"Ошибка сокета: {e}")
+            break
+
+async def main():
+    context = zmq.asyncio.Context()
+    socket = context.socket(zmq.REP)
+    socket.bind("tcp://*:5555")
+
+    logging.info("Сервер запущен! Нажмите Ctrl+C для завершения.")
+    print("Сервер запущен! Нажмите Ctrl+C для завершения.")
+
+    try:
         while True:
-            try:
-                conn, addr = server.accept()
-                with conn:
-                    print(f"Подключение от {addr}")
-                    handle_client(conn)
-            except KeyboardInterrupt:
-                print("\nСервер завершает работу...")
-                break
+            await handle_client(socket)
+    except KeyboardInterrupt:
+        logging.info("Сервер закрывается...")
+        print("\nСервер закрывается...")
+        socket.close()
+        context.term()
 
-if __name__ == "__main__":
-    start_server()
+asyncio.run(main())
+
+#sudo apt update
+#sudo apt install python3 python3-pip
+#pip install pyzmq asyncio matplotlib tkinter
+
+# запуск сервера python3 server.py
+# запуск клиента python3 client.py
